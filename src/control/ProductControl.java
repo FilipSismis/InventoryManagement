@@ -2,7 +2,11 @@ package control;
 
 import model.Accessory;
 import model.Clothing;
+import model.Product;
 import model.Supplier;
+
+import java.util.ArrayList;
+
 import db.ProductDB;
 import db.ProductDBIF;
 import db.ProductTypeDB;
@@ -35,6 +39,14 @@ public class ProductControl {
 	
 	public void deleteProduct(String pName) {
 		productDB.deleteProduct(pName);
+	}
+	
+	public void getProductList(String filter, String filterParam) {
+		ArrayList<Product> productList = new ArrayList<>();
+		productList = productDB.getProductList(filter, filterParam);
+		for(Product p : productList) {
+			System.out.println(p.getPName());
+		}
 	}
 	
 }

@@ -44,4 +44,22 @@ public class ProductTypeDB implements ProductTypeDBIF{
 		
 		return productType;
 	}
+	
+	public int findIdOfProductType(String productType) {
+		int id = 0;
+		
+		String queryString = "select * from ProductType where productType = ?";
+		try(PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(queryString)){
+			pstmt.setString(1, productType);
+			
+			ResultSet rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				id = rs.getInt("id");
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
 }

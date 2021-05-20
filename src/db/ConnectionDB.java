@@ -27,7 +27,8 @@ public class ConnectionDB {
 			System.out.println("URl string was: " + urlString);
 			e.printStackTrace();
 		}
-
+		Thread t = new ConnectionChecker();
+		t.start();
 	}
 	
 	public static ConnectionDB getInstance() {
@@ -49,7 +50,7 @@ public class ConnectionDB {
 		}
 	}
 	
-	public static String getDBName() {
-		return dbName;
+	public void run() {
+		
 	}
 }

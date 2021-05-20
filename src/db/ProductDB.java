@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ProductDB implements ProductDBIF{
 	ProductTypeDB productTypeDB;
 	SupplierDB supplierDB;
+	
 	public ProductDB() {
 		productTypeDB = new ProductTypeDB();
 		supplierDB = new SupplierDB();
@@ -23,7 +24,7 @@ public class ProductDB implements ProductDBIF{
 				"values(?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try (PreparedStatement insertAccessory = ConnectionDB.getInstance().getConnection().prepareStatement(insertString)){
-			insertAccessory.setString(1, accessory.getpName());
+			insertAccessory.setString(1, accessory.getPName());
 			insertAccessory.setInt(2, accessory.getSupplier().getId());
 			insertAccessory.setInt(3, accessory.getProductTypeId());
 			insertAccessory.setString(4, accessory.getColour());
@@ -44,7 +45,7 @@ public class ProductDB implements ProductDBIF{
 				"values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try (PreparedStatement insertClothing = ConnectionDB.getInstance().getConnection().prepareStatement(insertString)){
-			insertClothing.setString(1, clothing.getpName());
+			insertClothing.setString(1, clothing.getPName());
 			insertClothing.setInt(2, clothing.getSupplier().getId());
 			insertClothing.setInt(3, clothing.getProductTypeId());
 			insertClothing.setString(4, clothing.getColour());
@@ -63,7 +64,7 @@ public class ProductDB implements ProductDBIF{
 	public ArrayList<Product> getProductList(String filter, String filterParam){
 		ArrayList<Product> productList = new ArrayList<>();
 		
-		if(filter.equals(null)) {
+		if(filter.isBlank()) {
 			String queryProducts = "select * from Product";
 			try (PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(queryProducts)){
 				ResultSet rs = pstmt.executeQuery();
@@ -72,10 +73,22 @@ public class ProductDB implements ProductDBIF{
 				e.printStackTrace();
 			}
 		}else {	
-			String queryProducts = "select * from Product where ? = ?";
+			//String queryProducts = "select * from Product where ? = ?";
+			String queryProducts = String.format("select * from Product where %s = ?", filter);
 			try (PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(queryProducts)){
-				pstmt.setString(1, filter);
-				pstmt.setString(2, filterParam);	
+				switch(filter) {
+					case "discount":  
+						pstmt.setBoolean(1, Boolean.parseBoolean(filterParam));
+						break;
+					case "supplierId":
+						pstmt.setInt(1, supplierDB.findSupplierByEmail(filterParam).getId());
+						break;
+					case "productTypeId":
+						pstmt.setInt(1, productTypeDB.findIdOfProductType(filterParam));
+						break;
+					default:	
+					pstmt.setString(1, filterParam);
+				}	
 			
 				ResultSet rs = pstmt.executeQuery();
 				productList = buildProductlist(rs);
