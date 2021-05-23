@@ -20,8 +20,8 @@ public class ProductDB implements ProductDBIF{
 	
 	public void addAccessory(Accessory accessory) {
 		String insertString = "insert Product " + 
-				"(pName, supplierId, productTypeId, colour, discount, description, productCategory, material) " +
-				"values(?, ?, ?, ?, ?, ?, ?, ?)";
+				"(pName, supplierId, productTypeId, colour, discount, description, productCategory, sold, material) " +
+				"values(?, ?, ?, ?, ?, ?, ?, DEFAULT, ?)";
 		
 		try (PreparedStatement insertAccessory = ConnectionDB.getInstance().getConnection().prepareStatement(insertString)){
 			insertAccessory.setString(1, accessory.getPName());
@@ -41,8 +41,8 @@ public class ProductDB implements ProductDBIF{
 	
 	public void addClothing(Clothing clothing) {
 		String insertString = "insert Product " + 
-				"(pName, supplierId, productTypeId, colour, discount, description, productCategory, size, gender) " +
-				"values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"(pName, supplierId, productTypeId, colour, discount, description, productCategory, sold, size, gender) " +
+				"values(?, ?, ?, ?, ?, ?, ?, DEFAULT, ?, ?)";
 		
 		try (PreparedStatement insertClothing = ConnectionDB.getInstance().getConnection().prepareStatement(insertString)){
 			insertClothing.setString(1, clothing.getPName());
@@ -73,7 +73,6 @@ public class ProductDB implements ProductDBIF{
 				e.printStackTrace();
 			}
 		}else {	
-			//String queryProducts = "select * from Product where ? = ?";
 			String queryProducts = String.format("select * from Product where %s = ?", filter);
 			try (PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(queryProducts)){
 				switch(filter) {
@@ -85,6 +84,9 @@ public class ProductDB implements ProductDBIF{
 						break;
 					case "productTypeId":
 						pstmt.setInt(1, productTypeDB.findIdOfProductType(filterParam));
+						break;
+					case "sold":  
+						pstmt.setBoolean(1, Boolean.parseBoolean(filterParam));
 						break;
 					default:	
 					pstmt.setString(1, filterParam);
@@ -122,10 +124,17 @@ public class ProductDB implements ProductDBIF{
 				product = new Accessory(rs.getString("pName"), rs.getString("colour"), rs.getBoolean("discount"),
 						rs.getString("description"), productTypeDB.findProductTypeById(rs.getInt("productTypeId")),
 						supplierDB.findSupplierById(rs.getInt("supplierId")), rs.getString("material"));
+				product.setProductId(rs.getInt("id"));
+				product.setSold(rs.getBoolean("sold"));
+				productTypeDB.getProductTypeInfo(product);
 			}else {
 				product = new Clothing(rs.getString("pName"), rs.getString("colour"), rs.getBoolean("discount"),
 						rs.getString("description"), productTypeDB.findProductTypeById(rs.getInt("productTypeId")),
 						supplierDB.findSupplierById(rs.getInt("supplierId")), rs.getString("size"), rs.getString("gender"));
+				productTypeDB.getProductTypeInfo(product);
+				product.setProductId(rs.getInt("id"));
+				product.setSold(rs.getBoolean("sold"));
+				productTypeDB.getProductTypeInfo(product);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -144,5 +153,46 @@ public class ProductDB implements ProductDBIF{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Product getProductByPName(String pName) {
+		Product product = null;
+		String query = "select * from Product where pName = ?";
+		try(PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(query)){
+			pstmt.setString(1, pName);
+			
+			ResultSet rs = pstmt.executeQuery();
+			product = buildProduct(rs);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return product;
+	}
+
+	public void updateProduct(String pName, String filter, String filterParam) {
+		String query = String.format("update Product set %s = ? where pName = ?", filter);
+		try(PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(query)){
+			pstmt.setString(2, pName);
+			switch(filter) {
+			case "discount":  
+				pstmt.setBoolean(1, Boolean.parseBoolean(filterParam));
+				break;
+			case "supplierId":
+				pstmt.setInt(1, supplierDB.findSupplierByEmail(filterParam).getId());
+				break;
+			case "productTypeId":
+				pstmt.setInt(1, productTypeDB.findIdOfProductType(filterParam));
+				break;
+			case "sold":  
+				pstmt.setBoolean(1, Boolean.parseBoolean(filterParam));
+				break;
+			default:	
+			pstmt.setString(1, filterParam);
+			}
+			pstmt.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

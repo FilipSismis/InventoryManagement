@@ -10,6 +10,9 @@ public class Product {
 	private String productType;
 	private int productTypeId;
 	private float price;
+	private int productId;
+	private int saleOrderId;
+	private boolean sold;
 	
 	public Product(String pName, String colour, boolean discount, String description, String productType, Supplier supplier) {
 		this.pName = pName;
@@ -18,6 +21,7 @@ public class Product {
 		this.description = description;
 		this.productType = productType;
 		this.supplier = supplier;
+		this.sold = false;
 	}
 
 	public String getPName() {
@@ -86,6 +90,30 @@ public class Product {
 
 	public void setPrice(float price) {
 		this.price = price;
+	}
+	
+	public int getProductId() {
+		return productId;
+	}
+	
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public int getSaleOrderId() {
+		return saleOrderId;
+	}
+
+	public void setSaleOrderId(int saleOrderId) {
+		this.saleOrderId = saleOrderId;
+	}
+
+	public boolean isSold() {
+		return sold;
+	}
+
+	public void setSold(boolean sold) {
+		this.sold = sold;
 	}
 	
 	

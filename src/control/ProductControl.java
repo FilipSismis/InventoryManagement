@@ -49,4 +49,12 @@ public class ProductControl {
 		}
 	}
 	
+	public Product getProductByPName(String pName) {
+		return productDB.getProductByPName(pName);
+	}
+
+	public void updateProduct(String pName, String filter, String filterParam) {
+		productDB.updateProduct(pName, filter, filterParam);
+	}
+	
 }
