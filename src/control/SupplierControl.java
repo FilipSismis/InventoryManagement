@@ -32,5 +32,9 @@ public class SupplierControl {
 		personSupplier.setEmail(supplierEmail);
 		supplierDB.addPersonSupplier(personSupplier);
 	}
+	
+	public void deleteSupplier(String supplierEmail) {
+		supplierDB.deleteSupplier(supplierEmail);
+	}
 
 }

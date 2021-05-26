@@ -115,6 +115,5 @@ public class Product {
 	public void setSold(boolean sold) {
 		this.sold = sold;
 	}
-	
-	
+		
 }

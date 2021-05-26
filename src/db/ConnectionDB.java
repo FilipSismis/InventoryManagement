@@ -49,8 +49,4 @@ public class ConnectionDB {
 			e.printStackTrace();
 		}
 	}
-	
-	public void run() {
-		
-	}
 }

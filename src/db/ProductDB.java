@@ -162,7 +162,7 @@ public class ProductDB implements ProductDBIF{
 			pstmt.setString(1, pName);
 			
 			ResultSet rs = pstmt.executeQuery();
-			product = buildProduct(rs);
+			if(rs.next()) {product = buildProduct(rs);}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}

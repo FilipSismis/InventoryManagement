@@ -9,4 +9,5 @@ public interface SupplierDBIF {
 	Supplier findSupplierByEmail(String supplierEmail);
 	void addCompanySupplier(CompanySupplier companySupplier);
 	void addPersonSupplier(PersonSupplier personSupplier);
+	void deleteSupplier(String supplierEmail);
 }

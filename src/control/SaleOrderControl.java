@@ -25,6 +25,7 @@ public class SaleOrderControl {
 	public void addProduct(String pName) {
 		if(!productControl.getProductByPName(pName).isSold()) {
 			productControl.updateProduct(pName, "sold", "true");
+			productControl.updateProduct(pName, "saleOrderId", ""+saleOrder.getSaleOrderId());
 			saleOrder.addProduct(productControl.getProductByPName(pName));
 		}
 	}

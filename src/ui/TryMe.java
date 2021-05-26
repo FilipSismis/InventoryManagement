@@ -8,7 +8,7 @@ public class TryMe {
 	
 	public static void main(String[] args) {
 		TryMe mm = new TryMe();
-		mm.getProductList();		
+		mm.deleteProduct();
 	}
 	
 	public TryMe() {
@@ -24,7 +24,8 @@ public class TryMe {
 	}
 	
 	public void deleteProduct() {
-		pCtrl.deleteProduct("handbag1");
+		pCtrl.deleteProduct("test2");
+		pCtrl.deleteProduct("test1");
 		System.out.println("handbag was deleted");
 	}
 	
@@ -35,7 +36,19 @@ public class TryMe {
 	}
 	
 	public void getProductList() {
-		pCtrl.getProductList("productTypeId", "shirt");
+		pCtrl.getProductList("", "");
 	}
-
+	
+	public void deleteSupplier() {
+		sCtrl.deleteSupplier("testSupp1@gmail.com");
+		sCtrl.deleteSupplier("testSupp2@gmail.com");
+	}
+	
+	public void updateProduct() {
+		pCtrl.updateProduct("handbag2", "discount", "true");
+	}
+	
+	public void getProduct() {
+		System.out.println("" + pCtrl.getProductByPName("handbag2").isDiscounted());
+	}
 }

@@ -108,6 +108,17 @@ public class SupplierDB implements SupplierDBIF {
 		
 	}
 	
+	public void deleteSupplier(String supplierEmail) {
+		String deleteString = "delete from Supplier where email = ?";
+		try (PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(deleteString)){
+			pstmt.setString(1, supplierEmail);
+			
+			pstmt.executeUpdate();			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private Supplier buildCompanySupplier(ResultSet rs){
 		Supplier supplier = null;
 		try {

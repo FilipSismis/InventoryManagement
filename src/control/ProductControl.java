@@ -41,12 +41,10 @@ public class ProductControl {
 		productDB.deleteProduct(pName);
 	}
 	
-	public void getProductList(String filter, String filterParam) {
+	public ArrayList<Product> getProductList(String filter, String filterParam) {
 		ArrayList<Product> productList = new ArrayList<>();
 		productList = productDB.getProductList(filter, filterParam);
-		for(Product p : productList) {
-			System.out.println(p.getPName());
-		}
+		return productList;
 	}
 	
 	public Product getProductByPName(String pName) {

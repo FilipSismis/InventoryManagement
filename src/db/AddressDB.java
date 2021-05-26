@@ -48,18 +48,33 @@ public class AddressDB{
 	
 	public void addAddress(CompanySupplier companySupplier) {
 		int zipId = addZipLocation(companySupplier);
-		String insertAddress = "insert Address (addressLine, zipcodeId) values(?, ?)";
-		try (PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(insertAddress, Statement.RETURN_GENERATED_KEYS)){
+		companySupplier.setAddressId(0);
+		String queryAddress = "select * from Address where addressLine = ?";
+		try (PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(queryAddress)){
 			pstmt.setString(1, companySupplier.getAddress());
-			pstmt.setInt(2, zipId);
 			
-			pstmt.executeUpdate();
-			ResultSet rs = pstmt.getGeneratedKeys();
+			ResultSet rs = pstmt.executeQuery();
 			if(rs.next()) {
 				companySupplier.setAddressId(rs.getInt(1));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		
+		if(companySupplier.getAddressId() == 0) {
+			String insertAddress = "insert Address (addressLine, zipcodeId) values(?, ?)";
+			try (PreparedStatement pstmt = ConnectionDB.getInstance().getConnection().prepareStatement(insertAddress, Statement.RETURN_GENERATED_KEYS)){
+				pstmt.setString(1, companySupplier.getAddress());
+				pstmt.setInt(2, zipId);
+				
+				pstmt.executeUpdate();
+				ResultSet rs = pstmt.getGeneratedKeys();
+				if(rs.next()) {
+					companySupplier.setAddressId(rs.getInt(1));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
