@@ -162,7 +162,7 @@ public class ProductDB implements ProductDBIF{
 			pstmt.setString(1, pName);
 			
 			ResultSet rs = pstmt.executeQuery();
-			product = buildProduct(rs);
+			if(rs.next()) {product = buildProduct(rs);}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
@@ -186,6 +186,8 @@ public class ProductDB implements ProductDBIF{
 			case "sold":  
 				pstmt.setBoolean(1, Boolean.parseBoolean(filterParam));
 				break;
+			case "saleOrderId":
+				pstmt.setInt(1, Integer.parseInt(filterParam));
 			default:	
 			pstmt.setString(1, filterParam);
 			}
@@ -196,3 +198,4 @@ public class ProductDB implements ProductDBIF{
 		
 	}
 }
+	

@@ -5,8 +5,10 @@ import model.Clothing;
 import model.Product;
 import model.Supplier;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import db.ConnectionDB;
 import db.ProductDB;
 import db.ProductDBIF;
 import db.ProductTypeDB;
@@ -41,12 +43,10 @@ public class ProductControl {
 		productDB.deleteProduct(pName);
 	}
 	
-	public void getProductList(String filter, String filterParam) {
+	public ArrayList<Product> getProductList(String filter, String filterParam) {
 		ArrayList<Product> productList = new ArrayList<>();
 		productList = productDB.getProductList(filter, filterParam);
-		for(Product p : productList) {
-			System.out.println(p.getPName());
-		}
+		return productList;
 	}
 	
 	public Product getProductByPName(String pName) {
@@ -56,5 +56,17 @@ public class ProductControl {
 	public void updateProduct(String pName, String filter, String filterParam) {
 		productDB.updateProduct(pName, filter, filterParam);
 	}
-	
+
+	public void updateProductToSold(String pName, int saleOrderId)throws SQLException {
+		try {
+			ConnectionDB.getInstance().startTransaction();
+			if(!productDB.getProductByPName(pName).isSold()) {
+				productDB.updateProduct(pName, "sold", "true");
+				productDB.updateProduct(pName, "saleOrderId", ""+saleOrderId);
+			}
+			ConnectionDB.getInstance().commitTransaction();
+		}catch(SQLException e){
+			ConnectionDB.getInstance().rollbackTransaction();
+		}
+	}
 }

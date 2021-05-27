@@ -1,5 +1,7 @@
 package control;
 
+import java.sql.SQLException;
+
 import db.SaleOrderDB;
 import db.SaleOrderDBIF;
 import model.SaleOrder;
@@ -23,10 +25,12 @@ public class SaleOrderControl {
 	}
 	
 	public void addProduct(String pName) {
-		if(!productControl.getProductByPName(pName).isSold()) {
-			productControl.updateProduct(pName, "sold", "true");
-			saleOrder.addProduct(productControl.getProductByPName(pName));
+		try {
+			productControl.updateProductToSold(pName, saleOrder.getSaleOrderId());
+		}catch(SQLException e) {
+			e.printStackTrace();
 		}
+		saleOrder.addProduct(productControl.getProductByPName(pName));
 	}
 	
 	public void finishOrder(String invoiceNo) {
