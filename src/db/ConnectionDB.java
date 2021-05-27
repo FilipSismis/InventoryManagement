@@ -49,4 +49,18 @@ public class ConnectionDB {
 			e.printStackTrace();
 		}
 	}
+	
+	public void startTransaction() throws SQLException {
+		connection.setAutoCommit(false);
+	}
+	
+	public void commitTransaction() throws SQLException {
+		connection.commit();
+		connection.setAutoCommit(true);
+	}
+	
+	public void rollbackTransaction() throws SQLException {
+		connection.rollback();
+		connection.setAutoCommit(true);
+	}
 }

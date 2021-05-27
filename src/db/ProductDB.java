@@ -186,6 +186,8 @@ public class ProductDB implements ProductDBIF{
 			case "sold":  
 				pstmt.setBoolean(1, Boolean.parseBoolean(filterParam));
 				break;
+			case "saleOrderId":
+				pstmt.setInt(1, Integer.parseInt(filterParam));
 			default:	
 			pstmt.setString(1, filterParam);
 			}
@@ -196,3 +198,4 @@ public class ProductDB implements ProductDBIF{
 		
 	}
 }
+	
