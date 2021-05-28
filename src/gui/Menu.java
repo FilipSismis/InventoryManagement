@@ -2,23 +2,33 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import db.ConnectionDB;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingConstants;
 import java.awt.CardLayout;
+import java.awt.Color;
+
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import java.awt.Canvas;
+import java.awt.Label;
 
 public class Menu extends JFrame {
 
@@ -26,17 +36,15 @@ public class Menu extends JFrame {
 	private JPanel contentPane;
 	private JLayeredPane layeredPane2;
 	private JPanel saleOrderPanel;
-	private JPanel test4;
-	private JLabel lblNewLabel_3;
 	private JPanel AccessoryPanel;
 	private JPanel supplierCompPanel;
 	private JLabel lblNewLabel_1;
-	private JTextField emailComp;
-	private JTextField textField;
-	private JTextField textField_2;
-	private JTextField textField_4;
-	private JTextField textField_6;
-	private JTextField textField_7;
+	protected JTextField emailCompT;
+	protected JTextField nameT;
+	protected JTextField phoneT;
+	protected JTextField addressT;
+	protected JTextField zipcodeT;
+	protected JTextField cityT;
 	private JButton btnNewButton;
 	private JButton supplierIndB;
 	private JPanel supplierIndPanel;
@@ -51,13 +59,13 @@ public class Menu extends JFrame {
 	private JTextField textField_28;
 	private JLabel lblNewLabel_5;
 	private JLabel lblNewLabel_2_1;
-	private JTextField textField_1;
-	private JTextField textField_3;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField_11;
-	private JTextField textField_12;
+	private JTextField nameCl;
+	private JTextField colourCl;
+	private JTextField descriptionCl;
+	private JTextField productTypeCl;
+	private JTextField supplEmailCl;
+	private JTextField sizeCl;
+	private JTextField genderCl;
 	private JLabel lblNewLabel_2_2;
 	private JLabel lblNewLabel_2_3;
 	private JLabel lblNewLabel_2_4;
@@ -76,7 +84,8 @@ public class Menu extends JFrame {
 	private JTable indSuppTable;
 	private JTable compSuppTable;
 	private JTextField textField_5;
-	private JTable table;
+	private JTable orderTable;
+	protected JLabel connLabel;
 
 	/**
 	 * Launch the application.
@@ -101,8 +110,8 @@ public class Menu extends JFrame {
 		layeredPane2.revalidate();
 	}
 	
-	
 	public Menu() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 785, 416);
 		contentPane = new JPanel();
@@ -134,8 +143,8 @@ public class Menu extends JFrame {
 		scrollPane_4.setBounds(295, 45, 386, 205);
 		saleOrderPanel.add(scrollPane_4);
 		
-		table = new JTable();
-		scrollPane_4.setViewportView(table);
+		orderTable = new JTable();
+		scrollPane_4.setViewportView(orderTable);
 		
 		JButton btnNewButton_1 = new JButton("Add");
 		btnNewButton_1.setBounds(74, 75, 85, 21);
@@ -235,37 +244,37 @@ public class Menu extends JFrame {
 		layeredPane2.add(supplierCompPanel, "name_223784185487500");
 		supplierCompPanel.setLayout(null);
 		
-		emailComp = new JTextField();
-		emailComp.setBounds(109, 22, 96, 19);
-		supplierCompPanel.add(emailComp);
-		emailComp.setColumns(10);
-		
 		// SUPP. TEXT FIELDS
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(109, 46, 96, 19);
-		supplierCompPanel.add(textField);
+		emailCompT = new JTextField();
+		emailCompT.setBounds(109, 22, 96, 19);
+		supplierCompPanel.add(emailCompT);
+		emailCompT.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(109, 70, 96, 19);
-		supplierCompPanel.add(textField_2);
+		nameT = new JTextField();
+		nameT.setColumns(10);
+		nameT.setBounds(109, 46, 96, 19);
+		supplierCompPanel.add(nameT);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		textField_4.setBounds(109, 93, 96, 19);
-		supplierCompPanel.add(textField_4);
+		phoneT = new JTextField();
+		phoneT.setColumns(10);
+		phoneT.setBounds(109, 70, 96, 19);
+		supplierCompPanel.add(phoneT);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
-		textField_6.setBounds(109, 116, 96, 19);
-		supplierCompPanel.add(textField_6);
+		addressT = new JTextField();
+		addressT.setColumns(10);
+		addressT.setBounds(109, 93, 96, 19);
+		supplierCompPanel.add(addressT);
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
-		textField_7.setBounds(109, 141, 96, 19);
-		supplierCompPanel.add(textField_7);
+		zipcodeT = new JTextField();
+		zipcodeT.setColumns(10);
+		zipcodeT.setBounds(109, 116, 96, 19);
+		supplierCompPanel.add(zipcodeT);
+		
+		cityT = new JTextField();
+		cityT.setColumns(10);
+		cityT.setBounds(109, 141, 96, 19);
+		supplierCompPanel.add(cityT);
 		
 		// SUP. LABELS
 		
@@ -307,14 +316,6 @@ public class Menu extends JFrame {
 		
 		compSuppTable = new JTable();
 		scrollPane_3.setViewportView(compSuppTable);
-		
-		test4 = new JPanel();
-		layeredPane2.add(test4, "name_223784198099800");
-		test4.setLayout(null);
-		
-		lblNewLabel_3 = new JLabel("TEST");
-		lblNewLabel_3.setBounds(125, 64, 151, 41);
-		test4.add(lblNewLabel_3);
 		
 		supplierIndPanel = new JPanel();
 		layeredPane2.add(supplierIndPanel, "name_421854757087600");
@@ -379,40 +380,40 @@ public class Menu extends JFrame {
 		lblNewLabel_2_1.setBounds(10, 50, 45, 13);
 		ClothingPanel.add(lblNewLabel_2_1);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(172, 44, 175, 19);
-		ClothingPanel.add(textField_1);
+		nameCl = new JTextField();
+		nameCl.setColumns(10);
+		nameCl.setBounds(172, 44, 175, 19);
+		ClothingPanel.add(nameCl);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(172, 64, 175, 19);
-		ClothingPanel.add(textField_3);
+		colourCl = new JTextField();
+		colourCl.setColumns(10);
+		colourCl.setBounds(172, 64, 175, 19);
+		ClothingPanel.add(colourCl);
 		
-		textField_8 = new JTextField();
-		textField_8.setColumns(10);
-		textField_8.setBounds(172, 104, 175, 19);
-		ClothingPanel.add(textField_8);
+		descriptionCl = new JTextField();
+		descriptionCl.setColumns(10);
+		descriptionCl.setBounds(172, 104, 175, 19);
+		ClothingPanel.add(descriptionCl);
 		
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
-		textField_9.setBounds(172, 124, 175, 19);
-		ClothingPanel.add(textField_9);
+		productTypeCl = new JTextField();
+		productTypeCl.setColumns(10);
+		productTypeCl.setBounds(172, 124, 175, 19);
+		ClothingPanel.add(productTypeCl);
 		
-		textField_10 = new JTextField();
-		textField_10.setColumns(10);
-		textField_10.setBounds(172, 144, 175, 19);
-		ClothingPanel.add(textField_10);
+		supplEmailCl = new JTextField();
+		supplEmailCl.setColumns(10);
+		supplEmailCl.setBounds(172, 144, 175, 19);
+		ClothingPanel.add(supplEmailCl);
 		
-		textField_11 = new JTextField();
-		textField_11.setColumns(10);
-		textField_11.setBounds(172, 164, 175, 19);
-		ClothingPanel.add(textField_11);
+		sizeCl = new JTextField();
+		sizeCl.setColumns(10);
+		sizeCl.setBounds(172, 164, 175, 19);
+		ClothingPanel.add(sizeCl);
 		
-		textField_12 = new JTextField();
-		textField_12.setColumns(10);
-		textField_12.setBounds(172, 184, 175, 19);
-		ClothingPanel.add(textField_12);
+		genderCl = new JTextField();
+		genderCl.setColumns(10);
+		genderCl.setBounds(172, 184, 175, 19);
+		ClothingPanel.add(genderCl);
 		
 		lblNewLabel_2_2 = new JLabel("Colour");
 		lblNewLabel_2_2.setBounds(10, 70, 45, 13);
@@ -505,14 +506,6 @@ public class Menu extends JFrame {
 		supplerCompB.setBounds(328, 0, 175, 21);
 		contentPane.add(supplerCompB);
 		
-		JButton test4B = new JButton("test4B");
-		test4B.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				switchPanels2(test4);
-			}
-
-		});
-		
 		supplierIndB = new JButton("Individual Supplier Menu");
 		supplierIndB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -521,11 +514,9 @@ public class Menu extends JFrame {
 		});
 		supplierIndB.setBounds(328, 23, 175, 21);
 		contentPane.add(supplierIndB);
-		test4B.setBounds(10, 23, 104, 21);
-		contentPane.add(test4B);
 		
-		JLabel lblNewLabel_2 = new JLabel("New label");
-		lblNewLabel_2.setBounds(69, 54, 45, 13);
-		contentPane.add(lblNewLabel_2);
+		
+		
+		
+		
 	}
-}
