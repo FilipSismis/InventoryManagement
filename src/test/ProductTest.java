@@ -10,6 +10,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import control.ProductControl;
 import model.Product;
+
 @TestMethodOrder(OrderAnnotation.class)
 class ProductTest {
 

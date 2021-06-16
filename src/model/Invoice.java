@@ -33,4 +33,8 @@ public class Invoice {
 		return date.getTime();
 	}
 	
+	public Date getDate() {
+		return date;
+	}
+		
 }
